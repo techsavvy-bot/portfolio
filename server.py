@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, url_for
 import csv
 
 app = Flask(__name__)
@@ -10,17 +10,29 @@ def my_home():
     return render_template('index.html')
 
 
-@app.route('/<string:page_name>')
-def works(page_name):
-    return render_template(page_name)
+@app.route('/home', methods=['POST', 'GET'])
+def home():
+    return render_template('index.html')
 
 
-def write_to_file(*data):
-    with open('database.txt', 'a') as database:
-        email = data[0]
-        subject = data[1]
-        message = data[2]
-        database.write(f'\n{email},{subject},{message}')
+@app.route('/works', methods=['POST', 'GET'])
+def works():
+    return render_template('works.html')
+
+
+@app.route('/about', methods=['POST', 'GET'])
+def about():
+    return render_template('about.html')
+
+
+@app.route('/contact', methods=['POST', 'GET'])
+def contact():
+    return render_template('contact.html')
+
+
+@app.route('/work', methods=['POST', 'GET'])
+def work():
+    return render_template('work.html')
 
 
 def write_to_csv(*data):
@@ -40,7 +52,7 @@ def submit_form():
             data2 = request.form['subject']
             data3 = request.form['message']
             write_to_csv(data, data2, data3)
-            return redirect('/thank_you.html')
+            return render_template('thank_you.html')
         except:
             return 'did not save to database'
     else:
